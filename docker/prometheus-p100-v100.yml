@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'v100'
+    static_configs:
+      - targets: ['triton_server_v100:8002']     
+  - job_name: 'p100'
+    static_configs:
+      - targets: ['triton_server_p100:8002']
+

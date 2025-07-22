@@ -1,0 +1,59 @@
+name: triton_test
+services:
+  triton_server_v100:
+    build:
+      context: /home/cc/summer2025
+      dockerfile: docker/Dockerfile.triton
+    container_name: triton_server_v100
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              capabilities: ["gpu"]
+              device_ids: ["0"]
+
+  triton_server_p100:
+    build:
+      context: /home/cc/summer2025
+      dockerfile: docker/Dockerfile.triton
+    container_name: triton_server_p100
+    command: tritonserver --trace-file=/tmp/trace.json --trace-rate=1 --trace-count=1000 --trace-log-frequency=100 --trace-level=TIMESTAMPS --model-repository=/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              capabilities: ["gpu"]
+              device_ids: ["1"]
+
+  jupyter:
+    image: quay.io/jupyter/minimal-notebook:latest
+    container_name: jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - /home/cc/summer2025/workspace:/home/jovyan/work # mount workspace
+    command: >
+      bash -c "python3 -m pip install bash_kernel tritonclient[all] pandas matplotlib && 
+               python3 -m bash_kernel.install && start-notebook.sh"
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus-p100-v100.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
