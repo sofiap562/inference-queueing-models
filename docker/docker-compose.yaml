@@ -5,6 +5,7 @@ services:
       context: /home/cc/summer2025
       dockerfile: docker/Dockerfile.triton
     container_name: triton_server
+    command: tritonserver --trace-file=/tmp/trace.json --trace-rate=1 --trace-count=20000 --trace-log-frequency=1620 --trace-level=TIMESTAMPS --model-repository=/models
     deploy:
       resources:
         reservations:
@@ -37,13 +38,13 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    depends_on:
-      - prometheus
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+#  grafana:
+ #   image: grafana/grafana:latest
+  #  container_name: grafana
+   # ports:
+    #  - "3000:3000"
+   # depends_on:
+    #  - prometheus
+   # environment:
+    #  - GF_SECURITY_ADMIN_USER=admin
+     # - GF_SECURITY_ADMIN_PASSWORD=admin
