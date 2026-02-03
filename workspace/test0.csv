@@ -1,2 +1,0 @@
-Request Rate,Inferences/Second,Client Send,Network+Server Send/Recv,Server Queue,Server Compute Input,Server Compute Infer,Server Compute Output,Client Recv,p50 latency,p90 latency,p95 latency,p99 latency
-20,18.2676,4408,8991,2988,642,16643,81,0,30324,44822,48169,54766

@@ -2,10 +2,12 @@ name: triton_test
 services:
   triton_server:
     build:
-      context: /home/cc/summer2025
+      context: /home/cc/spring2026
       dockerfile: docker/Dockerfile.triton
     container_name: triton_server
-    command: tritonserver --trace-file=/tmp/trace.json --trace-rate=1 --trace-count=20000 --trace-log-frequency=350 --trace-level=TIMESTAMPS --model-repository=/models
+    command: tritonserver --trace-file=/tmp/trace.json --trace-rate=1 --trace-count=20000 --trace-log-frequency=350 --trace-level=TIMESTAMPS --model-repository=/models --model-control-mode=poll --repository-poll-secs=2
+    volumes:
+      - /home/cc/spring2026/models:/models # mount models
     deploy:
       resources:
         reservations:
@@ -24,7 +26,8 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - /home/cc/summer2025/workspace:/home/jovyan/work # mount workspace
+      - /home/cc/spring2026/workspace:/home/jovyan/work # mount workspace
+      - /home/cc/spring2026/models:/home/jovyan/models # mount models
     command: >
       bash -c "python3 -m pip install bash_kernel tritonclient[all] && 
                python3 -m bash_kernel.install && start-notebook.sh"
