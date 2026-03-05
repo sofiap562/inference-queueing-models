@@ -1,6 +1,6 @@
 name: "food_classifier_onnx"
 backend: "onnxruntime"
-max_batch_size: 1
+max_batch_size: 2
 input [
   {
     name: "input"  # has to match ONNX model's input name
