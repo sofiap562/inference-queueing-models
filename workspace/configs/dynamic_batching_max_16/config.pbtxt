@@ -1,6 +1,6 @@
 name: "food_classifier_onnx"
 backend: "onnxruntime"
-max_batch_size: 32
+max_batch_size: 16
 input [
   {
     name: "input"  # has to match ONNX model's input name
@@ -24,7 +24,7 @@ output [
 ]
 dynamic_batching {
 
-	preferred_batch_size: [1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32]
+	preferred_batch_size: [1, 2, 4, 6, 8, 10, 12, 14, 16]
 
 	max_queue_delay_microseconds: 100
 
